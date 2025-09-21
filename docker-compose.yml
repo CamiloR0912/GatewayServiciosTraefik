@@ -1,16 +1,36 @@
 services:
+  traefik:
+    image: traefik:v3.5
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--api.dashboard=true" # Habilitar el dashboard de Traefik
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - gateway-network
+    labels:
+      - "traefik.enable=true"
+      # Router para el dashboard en ops.localhost/dashboard/
+      - "traefik.http.routers.traefik.rule=Host(`ops.localhost`) && PathPrefix(`/dashboard`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.middlewares.strip-dashboard.stripprefix.prefixes=/dashboard"
+      - "traefik.http.routers.traefik.middlewares=strip-dashboard"
+
   neo4j:
     image: neo4j:5.22.0-community
     restart: always
     environment:
       NEO4J_AUTH: "${NEO4J_USER}/${NEO4J_PASSWORD}"
-    ports:
-      - "7474:7474"
-      - "7687:7687"
     volumes:
       - neo4j_data:/data
+      - ./import:/import
     networks:
-      - app_network
+      - gateway-network
 
   backend:
     build: ./backend
@@ -20,15 +40,17 @@ services:
     env_file:
       - .env
     networks:
-      - app_network
-    ports:
-      - "${EXPRESS_PORT:-3000}:3000"
+      - gateway-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.localhost`)" # Router para ela api en api.localhost
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
 
 volumes:
   neo4j_data:
     driver: local
 
 networks:
-  app_network:
+  gateway-network:
     driver: bridge
-
