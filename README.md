@@ -45,16 +45,16 @@
   ![alt text](img/image-13.png)
 
 ## 4. balanceo
-- En nuestro Docker-compose.yml lo que hacemos es crear otro servicio haciendo referencia al mismo router
+- En nuestro Docker-compose.yml lo que hacemos es crear otro servicio haciendo referencia al mismo router.
  ![alt text](img/4.1.png)
 
--En nueeestra API generamos un endpoint que nos retorne la instacioa de cada servicio
+-En nueeestra API generamos un endpoint que nos retorne la instacioa de cada servicio.
 ![alt text](img/4.2.png)
 
--Bajamos nuestro contenedor y lo levantamos de nuevo
+-Bajamos nuestro contenedor y lo levantamos de nuevo.
 ![alt text](img/4.3.png)
 
--Hacemos petciones a nuestro endpoint y podemos visualizar como hay en nuestro llamado 2 tipos de peticiones 
+-Hacemos petciones a nuestro endpoint y podemos visualizar como hay en nuestro llamado 2 tipos de peticiones.
 ![alt text](img/4.4.png)
 
 -Ya estando es traefik podemos visualizar que el servicio de backend tiene dos servidores.
@@ -62,7 +62,25 @@
 
 ## 5. Descubrimiento automático
 
+- definimos nuestro servicio para que envie notificaciones de trafico a Traefik.cv
+ ![alt text](img/5.1.png)
 
+- Nuestro servico traefik lo ajustamos paa que detecte esos cambios.
+ ![alt text](img/5.2.png)
+
+-Bajamos y levantamos nuestros servicios.
+ ![alt text](img/5.3.png)
+
+-Vemos que tenemos en backend solo un servicio.
+ ![alt text](img/5.4.png)
+
+-Levantamos nuestro contenedro nuevamente con 3 replicas y vemos estan en nuestros 3 servicios de backend 
+ ![alt text](img/5.5.png)
+
+ -Ya en nuestro dashboard tendriamos en nuestro balanceador de cargas los 3 servicos 
+ ![alt text](img/5.6.png)
+ 
+ 
 
 
 
