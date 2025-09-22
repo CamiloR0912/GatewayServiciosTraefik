@@ -26,3 +26,20 @@
  ![alt text](image-6.png)
  - Dasboard desde la url *http://ops.localhost/dashboard/dashboard/* 
  ![alt text](image-7.png)
+
+## 3. Middlewares
+ - Middlewares del dashboard
+ ![alt text](image-8.png)
+
+ - Middlewares de la api
+ ![alt text](image-9.png)
+
+ - Comprobación del funcionamiento de los middlewares
+ ![alt text](image-10.png)
+
+ - el middleware está configurado para recibir 10 peticiones, por lo cual aparecen las primeras 11 peticiones con codigo 200 de OK, luego cuando se sobrepasan las 11 peticiones aparece el codigo 429 **Too Many Requests** 
+ ![alt text](image-11.png)
+
+ - Middleware de autenticación básica
+ ![alt text](image-12.png)
+  ![alt text](image-13.png)

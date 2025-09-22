@@ -5,7 +5,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--api.dashboard=true" # Habilitar el dashboard de Traefik
+      - "--api.dashboard=true"
     ports:
       - "80:80"
     volumes:
@@ -14,12 +14,21 @@ services:
       - gateway-network
     labels:
       - "traefik.enable=true"
-      # Router para el dashboard en ops.localhost/dashboard/
+
+      # Router para el dashboard
       - "traefik.http.routers.traefik.rule=Host(`ops.localhost`) && PathPrefix(`/dashboard`)"
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.service=api@internal"
+
+      # Middleware stripPrefix
       - "traefik.http.middlewares.strip-dashboard.stripprefix.prefixes=/dashboard"
-      - "traefik.http.routers.traefik.middlewares=strip-dashboard"
+
+      # Middleware de autenticación básica
+      - "traefik.http.middlewares.dashboard-auth.basicauth.users=traefik:$$2y$$05$$9Io5.3qZkfuBRD0haJhLPON2c9.5G1C2OF0Gkmdew0sWgyFOFv4oO"
+
+      # Aplicar middlewares
+      - "traefik.http.routers.traefik.middlewares=strip-dashboard,dashboard-auth"
+
 
   neo4j:
     image: neo4j:5.22.0-community
@@ -43,9 +52,22 @@ services:
       - gateway-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`api.localhost`)" # Router para ela api en api.localhost
+
+      # API disponible en api.localhost/api/
+      - "traefik.http.routers.backend.rule=Host(`api.localhost`) && PathPrefix(`/api`)"
       - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.services.backend.loadbalancer.server.port=3000"
+
+      # Middleware stripPrefix
+      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
+
+      # Middleware rateLimit (máx 5 req/s por cliente)
+      - "traefik.http.middlewares.api-ratelimit.ratelimit.average=5"
+      - "traefik.http.middlewares.api-ratelimit.ratelimit.burst=10"
+
+      # Aplicar los 2 middlewares al router
+      - "traefik.http.routers.backend.middlewares=strip-api,api-ratelimit"
+
 
 volumes:
   neo4j_data:
