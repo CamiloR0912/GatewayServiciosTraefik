@@ -80,7 +80,21 @@
  -Ya en nuestro dashboard tendriamos en nuestro balanceador de cargas los 3 servicos 
  ![alt text](img/5.6.png)
  
- 
+## Health 
+
+-Hacemos la contruccion de nuestro endpoint /health que nos dara el estado de nuestro servicio
+ ![alt text](img/6.1.png)
+
+ -Esta es la respuesta que nos retornaria nuestro health
+ ![alt text](img/6.2.png)
+
+  -probamos nuestro endpoint de listar personas
+ ![alt text](img/6.3.png)
+
+ -miramos en nuestro dashboard los servicios, routers y moddlewares 
+ ![alt text](img/6.4.png)
+ ![alt text](img/6.5.png)
+ ![alt text](img/6.6.png)
 
 
 
