@@ -1,4 +1,18 @@
 services:
+
+  errorpages:
+    image: nginx:alpine
+    volumes:
+      - ./error-pages:/usr/share/nginx/html:ro
+    networks:
+      - gateway-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.errorpages.rule=HostRegexp(`{host:.+}`)"
+      - "traefik.http.routers.errorpages.entrypoints=web"
+      - "traefik.http.services.errorpages.loadbalancer.server.port=80"
+
+
   traefik:
     image: traefik:v3.5
     command:
@@ -15,19 +29,21 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # Router para el dashboard
-      - "traefik.http.routers.traefik.rule=Host(`ops.localhost`) && PathPrefix(`/dashboard`)"
+      # Dashboard
+      - "traefik.http.routers.traefik.rule=Host(`ops.localhost`) && PathPrefix(`/`)"
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.service=api@internal"
 
-      # Middleware stripPrefix
-      - "traefik.http.middlewares.strip-dashboard.stripprefix.prefixes=/dashboard"
+      # Middleware global de errores
+      - "traefik.http.middlewares.global-errors.errors.status=400-599"
+      - "traefik.http.middlewares.global-errors.errors.service=errorpages"
+      - "traefik.http.middlewares.global-errors.errors.query=/{status}.html"
 
-      # Middleware de autenticación básica
-      - "traefik.http.middlewares.dashboard-auth.basicauth.users=traefik:$$2y$$05$$9Io5.3qZkfuBRD0haJhLPON2c9.5G1C2OF0Gkmdew0sWgyFOFv4oO"
-
-      # Aplicar middlewares
-      - "traefik.http.routers.traefik.middlewares=strip-dashboard,dashboard-auth"
+      # Router global que atrapa todo
+      - "traefik.http.routers.catchall.rule=HostRegexp(`{host:.+}`)"
+      - "traefik.http.routers.catchall.entrypoints=web"
+      - "traefik.http.routers.catchall.middlewares=global-errors"
+      - "traefik.http.routers.catchall.service=errorpages"
 
 
   neo4j:
@@ -65,9 +81,13 @@ services:
       - "traefik.http.middlewares.api-ratelimit.ratelimit.average=5"
       - "traefik.http.middlewares.api-ratelimit.ratelimit.burst=10"
 
-      # Aplicar los 2 middlewares al router
-      - "traefik.http.routers.backend.middlewares=strip-api,api-ratelimit"
+      # Middleware errors
+      - "traefik.http.middlewares.api-errors.errors.status=400, 404, 502"
+      - "traefik.http.middlewares.api-errors.errors.service=errorpages"
+      - "traefik.http.middlewares.api-errors.errors.query=/{status}.html"
 
+      # Aplica el middleware junto a los otros
+      - "traefik.http.routers.backend.middlewares=strip-api,api-ratelimit,api-errors"
 
 volumes:
   neo4j_data:

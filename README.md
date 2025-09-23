@@ -84,3 +84,26 @@
 
 
 
+## Puntos extra, Middleware errores
+ - Se crea el servicio para los errores.
+ ![alt text](image.png)
+
+ - Se agrega el middleware al backend.
+ ![alt text](image-1.png)
+
+ - Se agrega el middleware global a traefik.
+ ![alt text](image-5.png)
+
+ - Se le da permisos a la carpeta para poder escribir en ella, luego se crea el archivo 404.html para redirigir al error.
+ ![alt text](image-2.png)
+
+ - Se crean los archivos 400.html y 502.html para redirigir al error.
+ ![alt text](image-4.png)
+
+ - Se crean endpoints en la api para forzar los errores 400, 404 y 502.
+ ![alt text](image-6.png)
+
+- prueba de funcionamiento del middleware.
+![alt text](image-3.png)
+![alt text](image-8.png)
+![alt text](image-7.png)

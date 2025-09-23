@@ -141,6 +141,21 @@ app.post('/people', async (req, res) => {
   }
 });
 
+// Ruta para forzar un 400
+app.get('/force-400', (req, res) => {
+  res.status(400).json({ error: "Solicitud inválida (forzado)" });
+});
+
+// Ruta para forzar un 404
+app.get('/force-404', (req, res) => {
+  res.status(404).json({ error: "Solicitud inválida (forzado)" });
+});
+
+// Ruta para forzar un 502
+app.get("/force-502", (req, res) => {
+  res.status(502).send("Simulación de 502 desde el backend");
+});
+
 // ======================
 // Iniciar servidor
 // ======================
