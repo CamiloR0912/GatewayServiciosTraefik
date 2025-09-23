@@ -48,50 +48,50 @@
 - En nuestro Docker-compose.yml lo que hacemos es crear otro servicio haciendo referencia al mismo router.
  ![alt text](img/4.1.png)
 
--En nueeestra API generamos un endpoint que nos retorne la instacioa de cada servicio.
+- En nueeestra API generamos un endpoint que nos retorne la instacioa de cada servicio.
 ![alt text](img/4.2.png)
 
--Bajamos nuestro contenedor y lo levantamos de nuevo.
+- Bajamos nuestro contenedor y lo levantamos de nuevo.
 ![alt text](img/4.3.png)
 
--Hacemos petciones a nuestro endpoint y podemos visualizar como hay en nuestro llamado 2 tipos de peticiones.
+- Hacemos petciones a nuestro endpoint y podemos visualizar como hay en nuestro llamado 2 tipos de peticiones.
 ![alt text](img/4.4.png)
 
--Ya estando es traefik podemos visualizar que el servicio de backend tiene dos servidores.
+- Ya estando es traefik podemos visualizar que el servicio de backend tiene dos servidores.
 ![alt text](img/4.5.png)
 
 ## 5. Descubrimiento automático
 
-- definimos nuestro servicio para que envie notificaciones de trafico a Traefik.cv
+- Definimos nuestro servicio para que envie notificaciones de trafico a Traefik.cv.
  ![alt text](img/5.1.png)
 
 - Nuestro servico traefik lo ajustamos paa que detecte esos cambios.
  ![alt text](img/5.2.png)
 
--Bajamos y levantamos nuestros servicios.
+- Bajamos y levantamos nuestros servicios.
  ![alt text](img/5.3.png)
 
--Vemos que tenemos en backend solo un servicio.
+- Vemos que tenemos en backend solo un servicio.
  ![alt text](img/5.4.png)
 
--Levantamos nuestro contenedro nuevamente con 3 replicas y vemos estan en nuestros 3 servicios de backend 
+- Levantamos nuestro contenedro nuevamente con 3 replicas y vemos estan en nuestros 3 servicios de backend. 
  ![alt text](img/5.5.png)
 
- -Ya en nuestro dashboard tendriamos en nuestro balanceador de cargas los 3 servicos 
+ - Ya en nuestro dashboard tendriamos en nuestro balanceador de cargas los 3 servicos. 
  ![alt text](img/5.6.png)
  
-## Health 
+## 6. Observabilidad 
 
--Hacemos la contruccion de nuestro endpoint /health que nos dara el estado de nuestro servicio
+ - Hacemos la contruccion de nuestro endpoint /health que nos dara el estado de nuestro servicio.
  ![alt text](img/6.1.png)
 
- -Esta es la respuesta que nos retornaria nuestro health
+ - Esta es la respuesta que nos retornaria nuestro health.
  ![alt text](img/6.2.png)
 
-  -probamos nuestro endpoint de listar personas
+ - Probamos nuestro endpoint de listar personas.
  ![alt text](img/6.3.png)
 
- -miramos en nuestro dashboard los servicios, routers y moddlewares 
+ - Miramos en nuestro dashboard los servicios, routers y middlewares. 
  ![alt text](img/6.4.png)
  ![alt text](img/6.5.png)
  ![alt text](img/6.6.png)
