@@ -1,6 +1,30 @@
 # Autores:
- - Julian Bayona
- - Camilo Ramirez
+ - ### Julian Bayona
+ - ### Camilo Ramirez
+
+## Diagrama de la solución
+![alt text](img/image-2.10.png)
+
+## Host usados
+ - `http://api.localhost/api/people`
+ - `http://api.localhost/api/force-400`
+ - `http://api.localhost/api/force-404`
+ - `http://api.localhost/api/force-502`
+ - `http://api.localhost/api/health`
+ - `http://ops.localhost/dashboard` **Usuario: traefik contraseña: 1234**
+
+## Reflexión técnica
+### ¿Qué aporta Traefik frente a mapear puertos directamente?
+Traefik permite centralizar el manejo de rutas, middlewares y balanceo entre réplicas sin necesidad de abrir muchos puertos en el host. En lugar de exponer cada servicio con su puerto, solo se expone Traefik, que enruta internamente, lo que mejora seguridad, mantenimiento y escalabilidad.
+
+---
+
+### ¿Qué middlewares usarían en producción y por qué?
+En producción usaríamos middlewares como RateLimit para evitar abusos, BasicAuth o algún sistema de autenticación para rutas sensibles (por ejemplo el dashboard), StripPrefix para limpiar rutas y tener URLs consistentes, y Errors para mostrar páginas de error amigables. Adicionalmente logging, monitoreo y health checks, para asegurar disponibilidad, seguridad y buena experiencia de usuario.
+
+---
+### Riesgos de dejar el dashboard “abierto” y cómo mitigarlos.  
+Si el dashboard de Traefik queda accesible sin control, cualquier atacante podría ver la configuración de los routers, servicios, middlewares, rutas, lo cual revela mucha información de infraestructura que puede usarse para ataques. **Para mitigarlos:** protegerlo con autenticación fuerte (BasicAuth), limitar acceso por IP o red interna, usar HTTPS, y asegurarse de no habilitar opciones inseguras como “--api.insecure=true” en entornos públicos.
 
 ## 1. Topología y redes
  - docker-compose.yml con los servicios, sin exponer los puertos de neo4j.
@@ -115,24 +139,24 @@
 
 ## Puntos extra, Middleware errores
  - Se crea el servicio para los errores.
- ![alt text](image.png)
+ ![alt text](img/image-2.1.png)
 
  - Se agrega el middleware al backend.
- ![alt text](image-1.png)
+ ![alt text](img/image-2.2.png)
 
  - Se agrega el middleware global a traefik.
- ![alt text](image-5.png)
+ ![alt text](img/image-2.3.png)
 
  - Se le da permisos a la carpeta para poder escribir en ella, luego se crea el archivo 404.html para redirigir al error.
- ![alt text](image-2.png)
+ ![alt text](img/image-2.4.png)
 
  - Se crean los archivos 400.html y 502.html para redirigir al error.
- ![alt text](image-4.png)
+ ![alt text](img/image-2.5.png)
 
  - Se crean endpoints en la api para forzar los errores 400, 404 y 502.
- ![alt text](image-6.png)
+ ![alt text](img/image-2.6.png)
 
 - prueba de funcionamiento del middleware.
-![alt text](image-3.png)
-![alt text](image-8.png)
-![alt text](image-7.png)
+![alt text](img/image-2.7.png)
+![alt text](img/image-2.8.png)
+![alt text](img/image-2.9.png)
